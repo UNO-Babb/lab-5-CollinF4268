@@ -3,38 +3,51 @@
 import random
 
 def inWord(letter, word):
-    """Returns boolean if letter is anywhere in the given word"""
-
-    return False
+    """Check if letter is anywhere in the word."""
+    return letter in word
 
 def inSpot(letter, word, spot):
-    """Returns boolean response if letter is in the given spot in the word."""
-
-    return False
+    """Check if letter is in the correct spot."""
+    return word[spot] == letter
 
 def rateGuess(myGuess, word):
-    """Rates your guess and returns a word with the following features.
-    - Capital letter if the letter is in the right spot
-    - Lower case letter if the letter is in the word but in the wrong spot
-    - * if the letter is not in the word at all"""
-
+    """Provide feedback on the guess."""
+    feedback = ""
+    for i in range(len(myGuess)):
+        if inSpot(myGuess[i], word, i):
+            feedback += myGuess[i].upper()  
+        elif inWord(myGuess[i], word):
+            feedback += myGuess[i].lower()  
+        else:
+            feedback += "-"  
+    return feedback
 
 def main():
-    #Pick a random word from the list of all words
-    wordFile = open("words.txt", 'r')
-    content = wordFile.read()
-    wordList = content.split("\n")
-    todayWord = random.choice(wordList)
-    print(todayWord)
+    with open("words.txt", "r") as wordfile:
+        wordlist = wordfile.read().splitlines()
 
-    #User should get 6 guesses to guess
+    todayWord = random.choice(wordlist)
+    print("Word selected. Start guessing!")
 
-    #Ask user for their guess
-    #Give feedback using on their word:
+    attempts = 6
+    while attempts > 0:
+        guess = input("Enter a 5-letter word: ").lower()
+        if len(guess) != 5:
+            print("Invalid word length. Try again.")
+            continue
 
+        feedback = rateGuess(guess, todayWord)
+        print("Feedback:", feedback)
 
+        if feedback == todayWord.upper():
+            print("Congratulations! You guessed the word.")
+            break
 
+        attempts -= 1
 
+    if attempts == 0:
+        print("Game over! The word was:", todayWord)
 
-if __name__ == '__main__':
-  main()
+if __name__ == "__main__":
+    main()
+

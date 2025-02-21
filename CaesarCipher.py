@@ -10,26 +10,35 @@ def encode(message, key):
     secret = ""
 
     for letter in message:
-        if (alpha.find(letter) >= 0): #check to see if the letter is actually a letter
-            spot = (alpha.find(letter) + key) % 26
-            secret = secret + alpha[spot]
-        else: # letter must have been a number, symbol, or punctuation.
-            secret = secret + letter
-
+        if letter in alpha:
+            spot = (alpha.find(letter) + key) % 26  
+            secret += alpha[spot]
+        else:
+            secret += letter  
     return secret
 
-#def decode(message, key):
-    #We will want to decode the message here.
+def decode(secret, key):
+    alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    message = ""
+
+    for letter in secret:
+        if letter in alpha:
+            spot = (alpha.find(letter) - key) % 26 
+            message += alpha[spot]
+        else:
+            message += letter  
+
+    return message
 
 def main():
     message = input("Enter a message: ")
-    key = int(input("Enter a key: "))
+    key = int(input("Enter a shift key: "))
 
-    secret = encode(message, key)
-    print ("Encrypted:", secret)
-    #plaintext = decode(secret, key)
-    #print ("Decrypted:", plaintext)
+    encrypted = encode(message, key)
+    print("Encrypted Message:", encrypted)
 
+    decrypted = decode(encrypted, key)
+    print("Decrypted Message:", decrypted)
 
-if __name__ == '__main__':
-  main()
+if __name__ == "__main__":
+    main()
